@@ -26,7 +26,13 @@ function App() {
       })
         .then((response) => {
           if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            if (response.status === 502) {
+              throw new Error('502 Bad Gateway: The server is down or not configured correctly.');
+            } else if (response.status === 403) {
+              throw new Error('403 Forbidden: Possible CORS error.');
+            } else {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
           }
           return response.json();
         })
@@ -63,8 +69,6 @@ function App() {
 
   return (
     <>
-     
-
       <h1>BFHL Challenge</h1>
       <div>
         <textarea
@@ -80,7 +84,7 @@ function App() {
         <div className="error" style={{ color: 'red', marginTop: '10px' }}>{error}</div>
       </div>
       {result && (
-        <div id="result" style={{ marginTop: '20px', whiteSpace: 'pre-wrap', backgroundColor: '#f4f4f4', padding: '10px', borderRadius: '5px' }}>
+        <div id="result" style={{ marginTop: '20px', whiteSpace: 'pre-wrap', backgroundColor: 'black', padding: '10px', borderRadius: '5px' }}>
           {JSON.stringify(result, null, 2)}
         </div>
       )}
@@ -103,7 +107,7 @@ function App() {
         </div>
       )}
       {filteredResult && (
-        <div id="filteredResult" style={{ marginTop: '20px', whiteSpace: 'pre-wrap', backgroundColor: '#f4f4f4', padding: '10px', borderRadius: '5px' }}>
+        <div id="filteredResult" style={{ marginTop: '20px', whiteSpace: 'pre-wrap', backgroundColor: 'black', padding: '10px', borderRadius: '5px' }}>
           {JSON.stringify(filteredResult, null, 2)}
         </div>
       )}
